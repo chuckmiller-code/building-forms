@@ -1,12 +1,10 @@
-import Form from "./components/Form"
-import FormState from "./components/FormState"
-import FormHook from "./components/FormHook"
+import ExpenseTracker from "./components/ExpenseTracker"
 
 function App() {
 
   return (
     <>
-      <FormHook />
+      <ExpenseTracker />
     </>
   )
 }
