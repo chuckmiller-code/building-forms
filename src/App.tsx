@@ -1,10 +1,10 @@
-import ExpenseTracker from "./components/ExpenseTracker"
+import ExpenseTrackerAlt from "./components/ExpenseTrackerAlt"
 
 function App() {
 
   return (
     <>
-      <ExpenseTracker />
+      <ExpenseTrackerAlt />
     </>
   )
 }

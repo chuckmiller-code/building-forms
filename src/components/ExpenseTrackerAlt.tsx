@@ -2,9 +2,23 @@ import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { v4 as uuidv4 } from "uuid";
 //uuid?
 
-const ExpenseTracker = () => {
+// copied code
+
+const schema = z.object({
+  description: z.string().min(3, { message: "Description must be at least 3 characters." }),
+  amount: z
+    .number({ invalid_type_error: "Amount field is required." })
+    .min(1, { message: "Amount must be at least 1." }),
+});
+
+type FormData = z.infer<typeof schema>;
+
+// copied code ends
+
+const ExpenseTrackerAlt = () => {
   const [expense, setExpense] = useState([
     { id: 1, description: "Bug 1", amount: 4, category: "grocery" },
     { id: 2, description: "Bug 2", amount: 4, category: "home" },
@@ -27,51 +41,50 @@ const ExpenseTracker = () => {
 
   // copied code
 
-  const schema = z.object({
-    name: z.string().min(3, { message: "Name must be at least 3 characters." }),
-    age: z
-      .number({ invalid_type_error: "Age field is required." })
-      .min(18, { message: "Age must be at least 18." }),
-  });
-  
-  type FormData = z.infer<typeof schema>;
-  
-    const {
-      register,
-      handleSubmit,
-      formState: { errors, isValid },
-    } = useForm<FormData>({ resolver: zodResolver(schema) });
-  
-    const onSubmit = (data: FieldValues) => {
-      console.log(data);
-    };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
+
+  const onSubmit = (data: FieldValues) => {
+    const newExpense = {
+      id: parseInt(uuidv4()),
+      description: data.description,
+      amount: data.amount,
+      category: "grocery"
+    }
+    setExpense([ ...expense, newExpense])
+  };
+
+  // copied code ends
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
-            Name
+            Description
           </label>
           <input
-            {...register("name")}
+            {...register("description")}
             id="name"
             type="text"
             className="form-control"
           />
-          {errors.name && <p className="text-danger">{errors.name.message}</p>}
+          {errors.description && <p className="text-danger">{errors.description.message}</p>}
         </div>
         <div className="mb-3">
           <label htmlFor="age" className="form-label">
-            Age
+            Amount
           </label>
           <input
-            {...register("age", { valueAsNumber: true })}
+            {...register("amount", { valueAsNumber: true })}
             id="age"
             type="number"
             className="form-control"
           />
-          {errors.age && <p className="text-danger">{errors.age.message}</p>}
+          {errors.amount && <p className="text-danger">{errors.amount.message}</p>}
         </div>
         <button disabled={!isValid} className="btn btn-primary mb-5" type="submit">
           Submit
@@ -118,4 +131,4 @@ const ExpenseTracker = () => {
   );
 };
 
-export default ExpenseTracker;
+export default ExpenseTrackerAlt;
